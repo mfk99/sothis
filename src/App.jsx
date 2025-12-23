@@ -32,11 +32,7 @@ function GameCards({ sortMode, searchMode }) {
 
 	return (
 		<div
-			style={{
-				display: 'grid',
-				gridTemplateColumns: 'repeat(3, 1fr)',
-				gap: '1rem',
-			}}
+			class= "grid grid-cols-3 gap-3"
 		>
 			{filteredGames.map((game) => (
 				<GameCard key={game.appid} game={game} />
@@ -56,15 +52,10 @@ function App() {
 
 	return (
 		<>
-			<div>
-				<div
-					style={{
-						display: 'grid',
-						gridTemplateColumns: 'repeat(3, 1fr)',
-						gap: '1rem',
-					}}
-				>
+			<div class ="grid gap-3">
+				<div class="grid grid-cols-3 gap-3">
 					<select
+						class="font-mono border-2 border-solid border-gray-300 p-4 rounded-2xl"
 						defaultValue="alphabetical"
 						onChange={(e) => setSortMode(e.target.value)}
 					>
@@ -73,7 +64,11 @@ function App() {
 						<option value="playtime">Playtime</option>
 						<option value="playtime-asc">Playtime, ascending</option>
 					</select>
-					<input onChange={(e) => setSearchMode(e.target.value)}></input>
+					<input 
+						class="font-mono border-2 border-solid border-gray-300 p-4 rounded-2xl "
+						placeholder='Filter games...'
+						onChange={(e) => setSearchMode(e.target.value)}
+						></input>
 					{userName && <UserCard user={userName} />}
 				</div>
 				<GameCards sortMode={sortMode} searchMode={searchMode}/>

@@ -4,21 +4,15 @@ export function GameCard({ game }) {
 
 	return (
 		<div
-			style={{
-				border: '1px solid #ccc',
-				borderRadius: '20px',
-				padding: '1rem',
-				marginBottom: '1rem',
-				fontFamily: 'monospace',
-			}}
+		class = "font-mono border-2 border-solid border-gray-300 p-4 rounded-2xl"
 		>
 			<h2>
 				<strong> {game.name} </strong>
 			</h2>
 			<img
+				class="rounded-md"
 				src={game.gameImageUrl}
 				alt={`${game.name} header`}
-				style={{ width: '100%', maxWidth: '460px', height: 'auto' }}
 			/>
 			<div>
 				<strong>Playtime:</strong> {hours} h {minutes} m
