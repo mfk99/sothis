@@ -3,6 +3,8 @@ import './App.css'
 import { GameCard } from './gamecard'
 import { UserCard } from './usercard'
 import { getGameData, getUserData } from './fetch-games'
+import { SearchInput } from './searchInput'
+import { SortSelect } from './sortSelect'
 
 function GameCards({ sortMode, searchMode }) {
 	const [games, setGames] = useState([])
@@ -54,21 +56,8 @@ function App() {
 		<>
 			<div class ="grid gap-3">
 				<div class="grid grid-cols-3 gap-3">
-					<select
-						class="font-mono border-2 border-solid border-gray-300 p-4 rounded-2xl"
-						defaultValue="alphabetical"
-						onChange={(e) => setSortMode(e.target.value)}
-					>
-						<option value="alphabetical">Alphabetical</option>
-						<option value="alphabetical-asc">Alphabetical, ascending</option>
-						<option value="playtime">Playtime</option>
-						<option value="playtime-asc">Playtime, ascending</option>
-					</select>
-					<input 
-						class="font-mono border-2 border-solid border-gray-300 p-4 rounded-2xl "
-						placeholder='Filter games...'
-						onChange={(e) => setSearchMode(e.target.value)}
-						></input>
+					<SortSelect onChange={(e) => setSortMode(e.target.value)} />
+					<SearchInput onChange={(e) => setSearchMode(e.target.value)} />
 					{userName && <UserCard user={userName} />}
 				</div>
 				<GameCards sortMode={sortMode} searchMode={searchMode}/>
