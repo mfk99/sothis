@@ -3,7 +3,7 @@ export function GameCard({ game }) {
   const minutes = game.playtimeMinutes % 60;
 
   return (
-    <div class="font-mono border-2 border-solid border-gray-300 p-4 rounded-2xl">
+    <div class="font-mono border-2 border-solid border-gray-300 p-4 rounded-2xl bg-linear-to-b from-gray-300 to-gray-500">
       <h2>
         <strong> {game.name} </strong>
       </h2>

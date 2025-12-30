@@ -3,7 +3,7 @@ function SortSelect({ onChange }) {
     <div>
       <div class="relative">
         <select
-          class=" w-full h-10 pl-8 pr-3 text-sm text-gray-700  focus:outline-none  shadow-sm focus:border-blue-500  border-2 border-solid border-gray-300 rounded-2xl"
+          class=" w-full h-10 pl-8 pr-3 text-sm text-gray-700  focus:outline-none  shadow-sm focus:border-blue-500  border-2 border-solid border-gray-300 rounded-2xl bg-gray-300"
           defaultValue="alphabetical"
           onChange={onChange}
         >

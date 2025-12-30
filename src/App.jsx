@@ -51,7 +51,7 @@ function App() {
   }, []);
 
   return (
-    <>
+    <body class="h-screen  bg-gray-900">
       <div class="grid gap-3">
         <div class="grid grid-cols-3 gap-3">
           <SortSelect onChange={(e) => setSortMode(e.target.value)} />
@@ -60,7 +60,7 @@ function App() {
         </div>
         <GameCards sortMode={sortMode} searchMode={searchMode} />
       </div>
-    </>
+    </body>
   );
 }
 
