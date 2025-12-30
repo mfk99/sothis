@@ -51,16 +51,14 @@ function App() {
   }, []);
 
   return (
-    <body class="h-screen  bg-gray-900">
-      <div class="grid gap-3">
-        <div class="grid grid-cols-3 gap-3">
-          <SortSelect onChange={(e) => setSortMode(e.target.value)} />
-          <SearchInput onChange={(e) => setSearchMode(e.target.value)} />
-          {userName && <UserCard user={userName} />}
-        </div>
-        <GameCards sortMode={sortMode} searchMode={searchMode} />
+    <div class="grid gap-3">
+      <div class="grid grid-cols-3 gap-3">
+        <SortSelect onChange={(e) => setSortMode(e.target.value)} />
+        <SearchInput onChange={(e) => setSearchMode(e.target.value)} />
+        {userName && <UserCard user={userName} />}
       </div>
-    </body>
+      <GameCards sortMode={sortMode} searchMode={searchMode} />
+    </div>
   );
 }
 
