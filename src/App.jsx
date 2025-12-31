@@ -29,7 +29,7 @@ function GameCards({ sortMode, searchMode }) {
   });
 
   const filteredGames = [...sortedGames].filter((game) =>
-    game.name.includes(searchMode)
+    game.name.toLowerCase().includes(searchMode.toLowerCase())
   );
 
   return (
