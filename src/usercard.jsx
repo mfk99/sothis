@@ -1,4 +1,4 @@
-export function UserCard({ user }) {
+export function UserCard({ user, onClick }) {
   const userName = user.personaname;
 
   return (
@@ -7,7 +7,10 @@ export function UserCard({ user }) {
         <h2 class="flex items-center w-full h-10 pl-8 pr-3 text-sm text-gray-700  focus:outline-none  shadow-sm focus:border-blue-500  border-2 border-solid border-gray-300 rounded-2xl bg-gray-300">
           <strong> {userName} </strong>
         </h2>
-        <span class="absolute inset-y-0 left-0 flex items-center justify-center ml-2">
+        <span
+          class="absolute inset-y-0 left-0 flex items-center justify-center ml-2 cursor-pointer"
+          onClick={onClick}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

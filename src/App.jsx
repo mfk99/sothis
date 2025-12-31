@@ -42,7 +42,7 @@ function GameCards({ sortMode, searchMode }) {
 }
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [pageState, setPageState] = useState("library");
   const [userName, setUserName] = useState(null);
   const [sortMode, setSortMode] = useState("alphabetical");
   const [searchMode, setSearchMode] = useState("");
@@ -50,16 +50,34 @@ function App() {
     getUserData().then(setUserName).catch(console.error);
   }, []);
 
-  return (
-    <div class="grid gap-3">
-      <div class="grid grid-cols-3 gap-3">
-        <SortSelect onChange={(e) => setSortMode(e.target.value)} />
-        <SearchInput onChange={(e) => setSearchMode(e.target.value)} />
-        {userName && <UserCard user={userName} />}
-      </div>
-      <GameCards sortMode={sortMode} searchMode={searchMode} />
-    </div>
-  );
+  console.log(pageState);
+  switch (pageState) {
+    case "library":
+      return (
+        <div class="grid gap-3">
+          <div class="grid grid-cols-3 gap-3">
+            <SortSelect onChange={(e) => setSortMode(e.target.value)} />
+            <SearchInput onChange={(e) => setSearchMode(e.target.value)} />
+            {userName && (
+              <UserCard
+                user={userName}
+                onClick={(e) => setPageState("profile")}
+              />
+            )}
+          </div>
+          <GameCards sortMode={sortMode} searchMode={searchMode} />
+        </div>
+      );
+    case "profile":
+      return <div class="text-white">Welcome to the profile page :)</div>;
+    default:
+      return (
+        <div class="text-white">
+          <h2 class="text-3xl font-bold">404</h2>
+          <div>How did you end up here?</div>
+        </div>
+      );
+  }
 }
 
 export default App;
