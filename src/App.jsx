@@ -79,7 +79,7 @@ function App() {
       getGlobalAchievementPercentagesForGame();
       getPlayerAchievements();
       getRecentlyPlayedGames();
-      return <div class="text-white">Welcome to the profile page :)</div>;
+      return <div className="text-white">Welcome to the profile page :)</div>;
     default:
       return (
         <div className="text-white">
