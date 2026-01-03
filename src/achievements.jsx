@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import { getPlayerGamesAndAchievements } from "./fetch-games";
+import { getFullAchievementData } from "./fetch-games";
 
 export function Achievements() {
-  const [playerAchievementData, setPlayerAchievementData] = useState([]);
+  const [achievementData, setachievementData] = useState([]);
   useEffect(() => {
-    getPlayerGamesAndAchievements()
-      .then(setPlayerAchievementData)
-      .catch(console.error);
+    getFullAchievementData().then(setachievementData).catch(console.error);
   }, []);
   return (
     <div>
-      {Object.entries(playerAchievementData).map(([key, value]) => (
+      {Object.entries(achievementData).map(([key, value]) => (
         <GameAchievements gameData={value} />
       ))}
     </div>
@@ -18,9 +16,9 @@ export function Achievements() {
 }
 
 function GameAchievements({ gameData }) {
-  if (!gameData?.achievements) {
+  if (!gameData.hasAchievements) {
     return (
-      <div key={gameData.gameId} className="mb-4">
+      <div key={gameData.appid} className="mb-4">
         {" "}
         <div className="text-white">Name: {gameData.name}</div>
         <div className="text-white">ID: {gameData.appid}</div>
@@ -33,17 +31,17 @@ function GameAchievements({ gameData }) {
   }
 
   return (
-    <div key={gameData.gameId} className="mb-4">
+    <div key={gameData.appid} className="mb-4">
       {" "}
       <div className="text-white">Name: {gameData.name}</div>
       <div className="text-white">ID: {gameData.appid}</div>
       <div className="ml-4">
         {" "}
-        {gameData.achievements.map((achievementData) => (
-          <div key={achievementData.apiname} className="text-white">
+        {Object.entries(gameData.achievementData).map(([key, value]) => (
+          <div key={value.apiname} className="text-white">
             {" "}
-            Achievement: {achievementData.apiname}, Achieved:{" "}
-            {achievementData.achieved ? "Yes" : "No"}
+            Achievement: {value.apiname}, Achieved:{" "}
+            {value.achieved ? "Yes" : "No"}, Percentage: {value.percentage}
           </div>
         ))}
       </div>
