@@ -1,15 +1,14 @@
 export async function getGameData() {
   const url = formulateGameApiUrl();
   const response = await callApi(url);
-
   const usersGames = response.response.games.map((game) => {
     const gameImageUrl = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`;
-
     return {
       appid: game.appid,
       name: game.name,
       playtimeMinutes: game.playtime_forever,
       gameImageUrl: gameImageUrl,
+      has_community_visible_stats: game?.has_community_visible_stats || false,
     };
   });
 
@@ -53,23 +52,27 @@ export async function getGlobalAchievementPercentagesForGame(appId) {
 
 export async function getPlayerGamesAndAchievements() {
   const gameList = await getGameData();
-  const games = [];
-  for (const game of gameList) {
+  const gamesDict = {};
+  gameList.forEach((game) => {
+    gamesDict[game.appid] = game;
+  });
+  for (const appid of Object.keys(gamesDict)) {
+    const gameData = gamesDict[appid];
+    if (!gameData.has_community_visible_stats) {
+      continue;
+    }
     try {
-      const gameData = await getPlayerAchievements(game.appid);
-      games.push({
-        gameId: gameData.playerstats.steamID,
-        gameName: gameData.playerstats.gameName,
-        achievements: gameData.playerstats?.achievements || [],
-      });
+      const gameAchievementData = await getPlayerAchievements(gameData.appid);
+      gameData.achievements =
+        gameAchievementData.playerstats?.achievements || [];
     } catch (error) {
       console.error(
-        `Error fetching achievements for game ${game.appid}:`,
+        `Error fetching achievements for game ${gameData.appid}:`,
         error
       );
     }
   }
-  return games;
+  return gamesDict;
 }
 
 export async function getPlayerAchievements(appId) {
@@ -77,7 +80,7 @@ export async function getPlayerAchievements(appId) {
   const steamId = import.meta.env.VITE_STEAM_ID || "76561198029946068";
   const url = `/api/ISteamUserStats/GetPlayerAchievements/v0001/?appid=${appId}&key=${apiKey}&steamid=${steamId}`;
   const response = await callApi(url);
-  console.log(response);
+  // console.log(response);
   return response;
 }
 

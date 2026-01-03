@@ -8,27 +8,45 @@ export function Achievements() {
       .then(setPlayerAchievementData)
       .catch(console.error);
   }, []);
-
   return (
     <div>
-      {playerAchievementData.map((gameData) => (
-        <div key={gameData.gameId} className="mb-4">
-          {" "}
-          <div className="text-white">Name: {gameData.gameName}</div>
-          <div className="text-white">ID: {gameData.gameId}</div>
-          <div className="ml-4">
-            {" "}
-            {/* Indent achievements for visual hierarchy */}
-            {gameData.achievements.map((achievementData) => (
-              <div key={achievementData.apiname} className="text-white">
-                {" "}
-                Achievement: {achievementData.apiname}, Achieved:{" "}
-                {achievementData.achieved ? "Yes" : "No"}
-              </div>
-            ))}
-          </div>
-        </div>
+      {Object.entries(playerAchievementData).map(([key, value]) => (
+        <GameAchievements gameData={value} />
       ))}
+    </div>
+  );
+}
+
+function GameAchievements({ gameData }) {
+  if (!gameData?.achievements) {
+    return (
+      <div key={gameData.gameId} className="mb-4">
+        {" "}
+        <div className="text-white">Name: {gameData.name}</div>
+        <div className="text-white">ID: {gameData.appid}</div>
+        <div className="ml-4">
+          {" "}
+          <div className="text-white">This game has no achievements :(</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div key={gameData.gameId} className="mb-4">
+      {" "}
+      <div className="text-white">Name: {gameData.name}</div>
+      <div className="text-white">ID: {gameData.appid}</div>
+      <div className="ml-4">
+        {" "}
+        {gameData.achievements.map((achievementData) => (
+          <div key={achievementData.apiname} className="text-white">
+            {" "}
+            Achievement: {achievementData.apiname}, Achieved:{" "}
+            {achievementData.achieved ? "Yes" : "No"}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
