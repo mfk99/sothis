@@ -2,45 +2,10 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { GameCard } from "./gamecard";
 import { UserCard } from "./usercard";
-import {
-  getGameData,
-  getPlayerGamesAndAchievements,
-  getUserData,
-} from "./fetch-games";
+import { getGameData, getUserData } from "./fetch-games";
 import { SearchInput } from "./searchInput";
 import { SortSelect } from "./sortSelect";
-
-function Achievements() {
-  const [playerAchievementData, setPlayerAchievementData] = useState([]);
-  useEffect(() => {
-    getPlayerGamesAndAchievements()
-      .then(setPlayerAchievementData)
-      .catch(console.error);
-  }, []);
-
-  return (
-    <div>
-      {playerAchievementData.map((gameData) => (
-        <div key={gameData.gameId} className="mb-4">
-          {" "}
-          <div className="text-white">Name: {gameData.gameName}</div>
-          <div className="text-white">ID: {gameData.gameId}</div>
-          <div className="ml-4">
-            {" "}
-            {/* Indent achievements for visual hierarchy */}
-            {gameData.achievements.map((achievementData) => (
-              <div key={achievementData.apiname} className="text-white">
-                {" "}
-                Achievement: {achievementData.apiname}, Achieved:{" "}
-                {achievementData.achieved ? "Yes" : "No"}
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+import { Achievements } from "./achievements";
 
 function GameCards({ sortMode, searchMode }) {
   const [games, setGames] = useState([]);
