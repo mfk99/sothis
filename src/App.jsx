@@ -4,13 +4,43 @@ import { GameCard } from "./gamecard";
 import { UserCard } from "./usercard";
 import {
   getGameData,
-  getGlobalAchievementPercentagesForGame,
-  getPlayerAchievements,
-  getRecentlyPlayedGames,
+  getPlayerGamesAndAchievements,
   getUserData,
 } from "./fetch-games";
 import { SearchInput } from "./searchInput";
 import { SortSelect } from "./sortSelect";
+
+function Achievements() {
+  const [playerAchievementData, setPlayerAchievementData] = useState([]);
+  useEffect(() => {
+    getPlayerGamesAndAchievements()
+      .then(setPlayerAchievementData)
+      .catch(console.error);
+  }, []);
+
+  return (
+    <div>
+      {playerAchievementData.map((gameData) => (
+        <div key={gameData.gameId} className="mb-4">
+          {" "}
+          <div className="text-white">Name: {gameData.gameName}</div>
+          <div className="text-white">ID: {gameData.gameId}</div>
+          <div className="ml-4">
+            {" "}
+            {/* Indent achievements for visual hierarchy */}
+            {gameData.achievements.map((achievementData) => (
+              <div key={achievementData.apiname} className="text-white">
+                {" "}
+                Achievement: {achievementData.apiname}, Achieved:{" "}
+                {achievementData.achieved ? "Yes" : "No"}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function GameCards({ sortMode, searchMode }) {
   const [games, setGames] = useState([]);
@@ -74,12 +104,18 @@ function App() {
         </div>
       );
     case "profile":
-      // getUserData().then(console.log);
-      // getGameData().then(console.log);
-      getGlobalAchievementPercentagesForGame();
-      getPlayerAchievements();
-      getRecentlyPlayedGames();
-      return <div className="text-white">Welcome to the profile page :)</div>;
+      return (
+        <div>
+          <div className="text-white">
+            Welcome to the profile page :)
+            <div>
+              Note that loading the achievements may take a while depending on
+              your amount of games, please be patient.
+            </div>
+          </div>
+          <Achievements />
+        </div>
+      );
     default:
       return (
         <div className="text-white">
