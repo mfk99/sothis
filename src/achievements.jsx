@@ -38,10 +38,14 @@ function GameAchievements({ gameData }) {
       <div className="ml-4">
         {" "}
         {Object.entries(gameData.achievementData).map(([key, value]) => (
-          <div key={value.apiname} className="text-white">
-            {" "}
-            Achievement: {value.apiname}, Achieved:{" "}
-            {value.achieved ? "Yes" : "No"}, Percentage: {value.percentage}
+          <div key={value.name} className="text-white">
+            <div className="text-2xl">{value.displayName}</div>
+            <div>Apiname: {value.name}</div>
+            <div>Achieved: {value.achieved ? "Yes" : "No"}</div>
+            <div>Percentage: {value.percent}</div>
+            <div>Hidden: {value.hidden}</div>
+            <div>description: {value.description}</div>
+            <div />
           </div>
         ))}
       </div>
