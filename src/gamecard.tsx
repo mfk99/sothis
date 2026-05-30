@@ -1,4 +1,6 @@
-export function GameCard({ game }) {
+import type { Game } from "./fetch-games";
+
+export function GameCard({ game }: { game: Game }) {
   const hours = Math.floor(game.playtimeMinutes / 60);
   const minutes = game.playtimeMinutes % 60;
 

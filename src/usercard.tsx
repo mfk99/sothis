@@ -1,4 +1,13 @@
-export function UserCard({ user, onClick }) {
+interface User {
+  personaname: string;
+}
+
+interface UserCardProps {
+  user: User;
+  onClick: () => void;
+}
+
+export function UserCard({ user, onClick }: UserCardProps) {
   const userName = user.personaname;
 
   return (

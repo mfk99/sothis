@@ -1,7 +1,29 @@
+export interface Game {
+  name: string;
+  appid: number;
+  playtimeMinutes: number;
+  playtime_forever: number;
+  gameImageUrl: string;
+  has_community_visible_stats: boolean;
+  hasAchievements: boolean;
+  achievementData: Record<string, Achievement>;
+}
+
+export interface Achievement {
+  name: string;
+  apiname: string;
+  displayName: string;
+  description: string;
+  unlocktime: string;
+  percent: number;
+  achieved: boolean;
+  hidden: boolean;
+}
+
 export async function getGameData() {
   const url = formulateGameApiUrl();
   const response = await callApi(url);
-  const usersGames = response.response.games.map((game) => {
+  const usersGames = response.response.games.map((game: Game) => {
     const gameImageUrl = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`;
     return {
       appid: game.appid,
@@ -23,15 +45,15 @@ export async function getFullAchievementData() {
   return gamesDict;
 }
 
-function mapGameDataToDict(gameList) {
-  const gamesDict = {};
+function mapGameDataToDict(gameList: Array<Game>) {
+  const gamesDict: Record<number, Game> = {};
   gameList.forEach((game) => {
     gamesDict[game.appid] = game;
   });
   return gamesDict;
 }
 
-async function mapAchievementData(gamesDict) {
+async function mapAchievementData(gamesDict: Record<number, Game>) {
   for (const gameData of Object.values(gamesDict)) {
     if (!gameData.hasAchievements) {
       continue;
@@ -40,24 +62,29 @@ async function mapAchievementData(gamesDict) {
     await mapGlobalAchievementData(gameData);
   }
 }
-async function mapPersonalAchievementData(gameData) {
-  const response = await getPlayerAchievements(gameData.appid);
+
+async function mapPersonalAchievementData(gameData: Game) {
+  const response = await getPlayerAchievements(String(gameData.appid));
   console.log(response);
   const personalAchievementData = response.playerstats.achievements;
-  personalAchievementData.forEach((achievement) => {
-    gameData.achievementData[achievement.apiname].achieved =
-      achievement.achieved;
-    gameData.achievementData[achievement.apiname].unlocktime =
-      achievement.unlocktime;
+  personalAchievementData.forEach((achievement: Achievement) => {
+    const achievementEntry = gameData.achievementData[achievement.apiname];
+    if (!achievementEntry) return;
+    achievementEntry.achieved = achievement.achieved;
+    achievementEntry.unlocktime = achievement.unlocktime;
   });
 }
 
-async function mapGlobalAchievementData(gameData) {
-  const response = await getGlobalAchievementPercentagesForGame(gameData.appid);
+async function mapGlobalAchievementData(gameData: Game) {
+  const response = await getGlobalAchievementPercentagesForGame(
+    String(gameData.appid),
+  );
   console.log(response);
   const globalAchievementData = response.achievementpercentages.achievements;
-  globalAchievementData.forEach((achievement) => {
-    gameData.achievementData[achievement.name].percent = achievement.percent;
+  globalAchievementData.forEach((achievement: Achievement) => {
+    const achievementEntry = gameData.achievementData[achievement.name];
+    if (!achievementEntry) return;
+    achievementEntry.percent = achievement.percent;
   });
 }
 
@@ -67,7 +94,7 @@ export async function getUserData() {
   return userInformation;
 }
 
-async function callApi(apiUrl, format = "json") {
+async function callApi(apiUrl: string, format = "json") {
   const response = await fetch(apiUrl);
   if (!response.ok) {
     throw new Error("Network response was not ok");
@@ -96,13 +123,13 @@ function formulateUserApiUrl() {
   return url;
 }
 
-export async function getGlobalAchievementPercentagesForGame(appId) {
+export async function getGlobalAchievementPercentagesForGame(appId: string) {
   const url = `/api/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid=${appId}&format=json`;
   const response = await callApi(url);
   return response;
 }
 
-async function getPlayerAchievements(appId) {
+async function getPlayerAchievements(appId: string) {
   const apiKey = import.meta.env.VITE_STEAM_API_KEY;
   const steamId = import.meta.env.VITE_STEAM_ID || "76561198029946068";
   const url = `/api/ISteamUserStats/GetPlayerAchievements/v0001/?appid=${appId}&key=${apiKey}&steamid=${steamId}`;
@@ -118,12 +145,10 @@ export async function getRecentlyPlayedGames() {
   return response;
 }
 
-async function mapGameSchemaData(gamesDict) {
-  for (const appid of Object.keys(gamesDict)) {
-    const gameData = gamesDict[appid];
-
+async function mapGameSchemaData(gamesDict: Record<number, Game>) {
+  for (const [appid, gameData] of Object.entries(gamesDict)) {
     try {
-      const gameSchemaData = await getSchemaForGame(gameData.appid);
+      const gameSchemaData = await getSchemaForGame(String(gameData.appid));
       console.log(gameSchemaData);
 
       gameData.hasAchievements =
@@ -131,21 +156,21 @@ async function mapGameSchemaData(gamesDict) {
       if (gameData.hasAchievements) {
         gameData.achievementData = {};
         gameSchemaData.game.availableGameStats.achievements.forEach(
-          (achievement) =>
-            (gameData.achievementData[achievement.name] = achievement)
+          (achievement: Achievement) =>
+            (gameData.achievementData[achievement.name] = achievement),
         );
       }
       console.log(gameData);
     } catch (error) {
       console.error(
         `Error fetching global achievements for game ${gameData.appid}:`,
-        error
+        error,
       );
     }
   }
 }
 
-async function getSchemaForGame(appId) {
+async function getSchemaForGame(appId: string) {
   const apiKey = import.meta.env.VITE_STEAM_API_KEY;
   const xmlurl = `/api/ISteamUserStats/GetSchemaForGame/v2/?key=${apiKey}&appid=${appId}`;
   const xmlResponse = await callApi(xmlurl, "xml");

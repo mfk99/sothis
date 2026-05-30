@@ -7,14 +7,20 @@ import { SearchInput } from "./searchInput";
 import { SortSelect } from "./sortSelect";
 import { Achievements } from "./achievements";
 
-function GameCards({ sortMode, searchMode }) {
+function GameCards({
+  sortMode,
+  searchMode,
+}: {
+  sortMode: string;
+  searchMode: string;
+}) {
   const [games, setGames] = useState([]);
 
   useEffect(() => {
     getGameData().then(setGames).catch(console.error);
   }, []);
 
-  const sortedGames = [...games].sort((a, b) => {
+  const sortedGames = [...games].sort((a: any, b: any) => {
     switch (sortMode) {
       case "alphabetical":
         return a.name.localeCompare(b.name);
@@ -29,13 +35,13 @@ function GameCards({ sortMode, searchMode }) {
     }
   });
 
-  const filteredGames = [...sortedGames].filter((game) =>
-    game.name.toLowerCase().includes(searchMode.toLowerCase())
+  const filteredGames = [...sortedGames].filter((game: any) =>
+    game.name.toLowerCase().includes(searchMode.toLowerCase()),
   );
 
   return (
     <div className="grid grid-cols-3 gap-3">
-      {filteredGames.map((game) => (
+      {filteredGames.map((game: any) => (
         <GameCard key={game.appid} game={game} />
       ))}
     </div>
@@ -56,12 +62,12 @@ function App() {
       return (
         <div className="grid gap-3">
           <div className="grid grid-cols-3 gap-3">
-            <SortSelect onChange={(e) => setSortMode(e.target.value)} />
-            <SearchInput onChange={(e) => setSearchMode(e.target.value)} />
+            <SortSelect onChange={(value) => setSortMode(value)} />
+            <SearchInput onChange={(value) => setSearchMode(value)} />
             {userName && (
               <UserCard
                 user={userName}
-                onClick={(e) => setPageState("profile")}
+                onClick={() => setPageState("profile")}
               />
             )}
           </div>

@@ -1,8 +1,11 @@
+import type { Achievement, Game } from "./fetch-games";
 import { useEffect, useState } from "react";
 import { getFullAchievementData } from "./fetch-games";
 
 export function Achievements() {
-  const [achievementData, setachievementData] = useState([]);
+  const [achievementData, setachievementData] = useState<Record<number, Game>>(
+    {},
+  );
   useEffect(() => {
     getFullAchievementData().then(setachievementData).catch(console.error);
   }, []);
@@ -15,7 +18,7 @@ export function Achievements() {
   );
 }
 
-function GameAchievements({ gameData }) {
+function GameAchievements({ gameData }: { gameData: Game }) {
   if (!gameData.hasAchievements) {
     return (
       <div key={gameData.appid} className="mb-4">
