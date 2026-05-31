@@ -1,8 +1,4 @@
-export type SortMode =
-  | "alphabetical"
-  | "alphabetical-asc"
-  | "playtime"
-  | "playtime-asc";
+import type { SortMode } from "../types/sorting";
 
 function SortSelect({ onChange }: { onChange: (value: SortMode) => void }) {
   return (

@@ -1,24 +1,5 @@
-export interface Game {
-  name: string;
-  appid: number;
-  playtimeMinutes: number;
-  playtime_forever: number;
-  gameImageUrl: string;
-  has_community_visible_stats: boolean;
-  hasAchievements: boolean;
-  achievementData: Record<string, Achievement>;
-}
-
-export interface Achievement {
-  name: string;
-  apiname: string;
-  displayName: string;
-  description: string;
-  unlocktime: string;
-  percent: number;
-  achieved: boolean;
-  hidden: boolean;
-}
+import type { Achievement } from "../types/achievement";
+import type { Game } from "../types/game";
 
 export async function getGameData() {
   const url = formulateGameApiUrl();

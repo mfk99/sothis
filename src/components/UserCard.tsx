@@ -1,11 +1,9 @@
-export interface User {
-  personaname: string;
-}
+import type { User } from "../types/user";
 
-interface UserCardProps {
+type UserCardProps = {
   user: User;
   onClick: () => void;
-}
+};
 
 export function UserCard({ user, onClick }: UserCardProps) {
   const userName = user.personaname;

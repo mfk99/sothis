@@ -1,113 +1,14 @@
 import { useEffect } from "react";
-import { create } from "zustand";
 import "./App.css";
-import { GameCard } from "./gamecard";
-import { UserCard, type User } from "./usercard";
-import { getGameData, getUserData, type Game } from "./fetch-games";
-import { SearchInput } from "./searchInput";
-import { SortSelect, type SortMode } from "./sortSelect";
-import { Achievements } from "./achievements";
-
-type PageStore = {
-  page: "library" | "profile";
-  setPage: (newPage: "library" | "profile") => void;
-};
-
-const usePageStore = create<PageStore>()((set) => ({
-  page: "library",
-
-  setPage: (newPage) => set({ page: newPage }),
-}));
-
-type UserStore = {
-  user: User;
-  loadUser: () => void;
-};
-
-const useUserStore = create<UserStore>((set) => ({
-  user: {
-    personaname: "",
-  },
-  loadUser: async () => {
-    const user = await getUserData();
-    set({ user });
-  },
-}));
-
-type SortModeStore = {
-  sortMode: SortMode;
-  setSortMode: (newSortMode: SortMode) => void;
-};
-
-const useSortModeStore = create<SortModeStore>((set) => ({
-  sortMode: "alphabetical",
-  setSortMode: (newSortMode) => set({ sortMode: newSortMode }),
-}));
-
-type SearchModeStore = {
-  searchMode: string;
-  setSearchMode: (newSearchMode: string) => void;
-};
-
-const useSearchModeStore = create<SearchModeStore>((set) => ({
-  searchMode: "",
-  setSearchMode: (newSearchMode) => set({ searchMode: newSearchMode }),
-}));
-
-type GameStore = {
-  games: Array<Game>;
-  loadGames: () => Promise<void>;
-};
-
-const useGameStore = create<GameStore>((set) => ({
-  games: [],
-  loadGames: async () => {
-    const games = await getGameData();
-    set({ games });
-  },
-}));
-
-function GameCards({
-  sortMode,
-  searchMode,
-}: {
-  sortMode: string;
-  searchMode: string;
-}) {
-  const games = useGameStore((s) => s.games);
-  const loadGames = useGameStore((s) => s.loadGames);
-
-  useEffect(() => {
-    loadGames();
-  }, [loadGames]);
-
-  const sortedGames = [...games].sort((a: any, b: any) => {
-    switch (sortMode) {
-      case "alphabetical":
-        return a.name.localeCompare(b.name);
-      case "alphabetical-asc":
-        return b.name.localeCompare(a.name);
-      case "playtime":
-        return b.playtimeMinutes - a.playtimeMinutes;
-      case "playtime-asc":
-        return a.playtimeMinutes - b.playtimeMinutes;
-      default:
-        return 0;
-    }
-  });
-
-  const filteredGames = [...sortedGames].filter((game: any) =>
-    game.name.toLowerCase().includes(searchMode.toLowerCase()),
-  );
-
-  return (
-    <div className="grid grid-cols-3 gap-3">
-      {filteredGames.map((game: any) => (
-        <GameCard key={game.appid} game={game} />
-      ))}
-    </div>
-  );
-}
+import { UserCard } from "./components/UserCard";
+import { SearchInput } from "./components/SearchInput";
+import { SortSelect } from "./components/SortSelect";
+import { Achievements } from "./components/Achievements";
+import { usePageStore } from "./stores/page.store";
+import { useUserStore } from "./stores/user.store";
+import { useSortModeStore } from "./stores/sort.store";
+import { useSearchModeStore } from "./stores/search.store";
+import { GameCardGrid } from "./components/GameCardGrid";
 
 function App() {
   const pageState = usePageStore((s) => s.page);
@@ -133,7 +34,7 @@ function App() {
               <UserCard user={user} onClick={() => setPage("profile")} />
             )}
           </div>
-          <GameCards sortMode={sortMode} searchMode={searchMode} />
+          <GameCardGrid sortMode={sortMode} searchMode={searchMode} />
         </div>
       );
     case "profile":
