@@ -1,26 +1,28 @@
-import type { Achievement, Game } from "./fetch-games";
-import { useEffect, useState } from "react";
+import type { Game } from "./fetch-games";
+import { useEffect } from "react";
 import { getFullAchievementData } from "./fetch-games";
 import { create } from "zustand";
 
 type AchievementDataStore = {
   achievementData: Record<number, Game>;
-  setAchievementData: (newAchievementData: Record<number, Game>) => void;
+  loadAchievementData: () => void;
 };
 
 const useAchievementDataStore = create<AchievementDataStore>((set) => ({
   achievementData: {},
-  setAchievementData: (newAchievementData) =>
-    set({ achievementData: newAchievementData }),
+  loadAchievementData: async () => {
+    const achievementData = await getFullAchievementData();
+    set({ achievementData });
+  },
 }));
 
 export function Achievements() {
   const achievementData = useAchievementDataStore((s) => s.achievementData);
-  const setachievementData = useAchievementDataStore(
-    (s) => s.setAchievementData,
+  const loadAchievementData = useAchievementDataStore(
+    (s) => s.loadAchievementData,
   );
   useEffect(() => {
-    getFullAchievementData().then(setachievementData).catch(console.error);
+    loadAchievementData();
   }, []);
   return (
     <div>

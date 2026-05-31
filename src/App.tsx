@@ -21,14 +21,17 @@ const usePageStore = create<PageStore>()((set) => ({
 
 type UserStore = {
   user: User;
-  setUser: (newUser: User) => void;
+  loadUser: () => void;
 };
 
 const useUserStore = create<UserStore>((set) => ({
   user: {
     personaname: "",
   },
-  setUser: (newUser) => set({ user: newUser }),
+  loadUser: async () => {
+    const user = await getUserData();
+    set({ user });
+  },
 }));
 
 type SortModeStore = {
@@ -53,12 +56,15 @@ const useSearchModeStore = create<SearchModeStore>((set) => ({
 
 type GameStore = {
   games: Array<Game>;
-  setGames: (newGames: Array<Game>) => void;
+  loadGames: () => Promise<void>;
 };
 
 const useGameStore = create<GameStore>((set) => ({
   games: [],
-  setGames: (newGames) => set({ games: newGames }),
+  loadGames: async () => {
+    const games = await getGameData();
+    set({ games });
+  },
 }));
 
 function GameCards({
@@ -69,11 +75,11 @@ function GameCards({
   searchMode: string;
 }) {
   const games = useGameStore((s) => s.games);
-  const setGames = useGameStore((s) => s.setGames);
+  const loadGames = useGameStore((s) => s.loadGames);
 
   useEffect(() => {
-    getGameData().then(setGames).catch(console.error);
-  }, []);
+    loadGames();
+  }, [loadGames]);
 
   const sortedGames = [...games].sort((a: any, b: any) => {
     switch (sortMode) {
@@ -107,14 +113,14 @@ function App() {
   const pageState = usePageStore((s) => s.page);
   const setPage = usePageStore((s) => s.setPage);
   const user = useUserStore((s) => s.user);
-  const setUser = useUserStore((s) => s.setUser);
+  const loadUser = useUserStore((s) => s.loadUser);
   const sortMode = useSortModeStore((s) => s.sortMode);
   const setSortMode = useSortModeStore((s) => s.setSortMode);
   const searchMode = useSearchModeStore((s) => s.searchMode);
   const setSearchMode = useSearchModeStore((s) => s.setSearchMode);
   useEffect(() => {
-    getUserData().then(setUser).catch(console.error);
-  }, []);
+    loadUser();
+  }, [loadUser]);
 
   switch (pageState) {
     case "library":
