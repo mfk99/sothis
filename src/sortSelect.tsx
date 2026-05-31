@@ -1,11 +1,17 @@
-function SortSelect({ onChange }: { onChange: (value: string) => void }) {
+export type SortMode =
+  | "alphabetical"
+  | "alphabetical-asc"
+  | "playtime"
+  | "playtime-asc";
+
+function SortSelect({ onChange }: { onChange: (value: SortMode) => void }) {
   return (
     <div>
       <div className="relative">
         <select
           className=" w-full h-10 pl-8 pr-3 text-sm text-gray-700  focus:outline-none  shadow-sm focus:border-blue-500  border-2 border-solid border-gray-300 rounded-2xl bg-gray-300"
           defaultValue="alphabetical"
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value as SortMode)}
         >
           <option value="alphabetical">A-Z</option>
           <option value="alphabetical-asc">Z-A</option>

@@ -1,11 +1,65 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { create } from "zustand";
 import "./App.css";
 import { GameCard } from "./gamecard";
-import { UserCard } from "./usercard";
-import { getGameData, getUserData } from "./fetch-games";
+import { UserCard, type User } from "./usercard";
+import { getGameData, getUserData, type Game } from "./fetch-games";
 import { SearchInput } from "./searchInput";
-import { SortSelect } from "./sortSelect";
+import { SortSelect, type SortMode } from "./sortSelect";
 import { Achievements } from "./achievements";
+
+type PageStore = {
+  page: "library" | "profile";
+  setPage: (newPage: "library" | "profile") => void;
+};
+
+const usePageStore = create<PageStore>()((set) => ({
+  page: "library",
+
+  setPage: (newPage) => set({ page: newPage }),
+}));
+
+type UserStore = {
+  user: User;
+  setUser: (newUser: User) => void;
+};
+
+const useUserStore = create<UserStore>((set) => ({
+  user: {
+    personaname: "",
+  },
+  setUser: (newUser) => set({ user: newUser }),
+}));
+
+type SortModeStore = {
+  sortMode: SortMode;
+  setSortMode: (newSortMode: SortMode) => void;
+};
+
+const useSortModeStore = create<SortModeStore>((set) => ({
+  sortMode: "alphabetical",
+  setSortMode: (newSortMode) => set({ sortMode: newSortMode }),
+}));
+
+type SearchModeStore = {
+  searchMode: string;
+  setSearchMode: (newSearchMode: string) => void;
+};
+
+const useSearchModeStore = create<SearchModeStore>((set) => ({
+  searchMode: "",
+  setSearchMode: (newSearchMode) => set({ searchMode: newSearchMode }),
+}));
+
+type GameStore = {
+  games: Array<Game>;
+  setGames: (newGames: Array<Game>) => void;
+};
+
+const useGameStore = create<GameStore>((set) => ({
+  games: [],
+  setGames: (newGames) => set({ games: newGames }),
+}));
 
 function GameCards({
   sortMode,
@@ -14,7 +68,8 @@ function GameCards({
   sortMode: string;
   searchMode: string;
 }) {
-  const [games, setGames] = useState([]);
+  const games = useGameStore((s) => s.games);
+  const setGames = useGameStore((s) => s.setGames);
 
   useEffect(() => {
     getGameData().then(setGames).catch(console.error);
@@ -49,12 +104,16 @@ function GameCards({
 }
 
 function App() {
-  const [pageState, setPageState] = useState("library");
-  const [userName, setUserName] = useState(null);
-  const [sortMode, setSortMode] = useState("alphabetical");
-  const [searchMode, setSearchMode] = useState("");
+  const pageState = usePageStore((s) => s.page);
+  const setPage = usePageStore((s) => s.setPage);
+  const user = useUserStore((s) => s.user);
+  const setUser = useUserStore((s) => s.setUser);
+  const sortMode = useSortModeStore((s) => s.sortMode);
+  const setSortMode = useSortModeStore((s) => s.setSortMode);
+  const searchMode = useSearchModeStore((s) => s.searchMode);
+  const setSearchMode = useSearchModeStore((s) => s.setSearchMode);
   useEffect(() => {
-    getUserData().then(setUserName).catch(console.error);
+    getUserData().then(setUser).catch(console.error);
   }, []);
 
   switch (pageState) {
@@ -64,11 +123,8 @@ function App() {
           <div className="grid grid-cols-3 gap-3">
             <SortSelect onChange={(value) => setSortMode(value)} />
             <SearchInput onChange={(value) => setSearchMode(value)} />
-            {userName && (
-              <UserCard
-                user={userName}
-                onClick={() => setPageState("profile")}
-              />
+            {user && (
+              <UserCard user={user} onClick={() => setPage("profile")} />
             )}
           </div>
           <GameCards sortMode={sortMode} searchMode={searchMode} />
