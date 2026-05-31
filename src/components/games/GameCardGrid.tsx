@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useGameStore } from "../stores/game-store";
+import { useGameStore } from "../../stores/game.store";
 import { GameCard } from "./GameCard";
 
 export function GameCardGrid({

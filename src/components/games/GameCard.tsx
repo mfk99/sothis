@@ -1,4 +1,4 @@
-import type { Game } from "../types/game";
+import type { Game } from "../../types/game";
 
 export function GameCard({ game }: { game: Game }) {
   const hours = Math.floor(game.playtimeMinutes / 60);

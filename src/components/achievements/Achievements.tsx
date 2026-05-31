@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useAchievementDataStore } from "../stores/achievement-data-store";
-import type { Game } from "../types/game";
+import { useAchievementDataStore } from "../../stores/achievement.store";
+import type { Game } from "../../types/game";
 
 export function Achievements() {
   const achievementData = useAchievementDataStore((s) => s.achievementData);

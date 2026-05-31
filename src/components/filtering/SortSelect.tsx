@@ -1,4 +1,4 @@
-import type { SortMode } from "../types/sorting";
+import type { SortMode } from "../../types/sorting";
 
 function SortSelect({ onChange }: { onChange: (value: SortMode) => void }) {
   return (
