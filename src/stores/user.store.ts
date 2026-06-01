@@ -4,15 +4,15 @@ import { getUserData } from "../services/fetch-games";
 
 type UserStore = {
   user: User;
-  loadUser: () => void;
+  loadUser: (userId: string) => void;
 };
 
 export const useUserStore = create<UserStore>((set) => ({
   user: {
     personaname: "",
   },
-  loadUser: async () => {
-    const user = await getUserData();
+  loadUser: async (userId: string) => {
+    const user = await getUserData(userId);
     set({ user });
   },
 }));

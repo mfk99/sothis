@@ -1,8 +1,9 @@
 import type { Achievement } from "../types/achievement";
 import type { Game } from "../types/game";
 
-export async function getGameData() {
-  const url = formulateGameApiUrl();
+export async function getGameData(steamUserId: string) {
+  if (!steamUserId) return [];
+  const url = formulateGameApiUrl(steamUserId);
   const response = await callApi(url);
   const usersGames = response.response.games.map((game: Game) => {
     const gameImageUrl = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`;
@@ -17,11 +18,12 @@ export async function getGameData() {
   return usersGames;
 }
 
-export async function getFullAchievementData() {
-  const gameList = await getGameData();
+export async function getFullAchievementData(steamUserId: string) {
+  if (!steamUserId) return {};
+  const gameList = await getGameData(steamUserId);
   const gamesDict = mapGameDataToDict(gameList);
   await mapGameSchemaData(gamesDict);
-  await mapAchievementData(gamesDict);
+  await mapAchievementData(gamesDict, steamUserId);
   console.log(gamesDict);
   return gamesDict;
 }
@@ -34,18 +36,24 @@ function mapGameDataToDict(gameList: Array<Game>) {
   return gamesDict;
 }
 
-async function mapAchievementData(gamesDict: Record<number, Game>) {
+async function mapAchievementData(
+  gamesDict: Record<number, Game>,
+  steamUserId: string,
+) {
   for (const gameData of Object.values(gamesDict)) {
     if (!gameData.hasAchievements) {
       continue;
     }
-    await mapPersonalAchievementData(gameData);
+    await mapPersonalAchievementData(gameData, steamUserId);
     await mapGlobalAchievementData(gameData);
   }
 }
 
-async function mapPersonalAchievementData(gameData: Game) {
-  const response = await getPlayerAchievements(String(gameData.appid));
+async function mapPersonalAchievementData(gameData: Game, steamUserId: string) {
+  const response = await getPlayerAchievements(
+    String(gameData.appid),
+    steamUserId,
+  );
   console.log(response);
   const personalAchievementData = response.playerstats.achievements;
   personalAchievementData.forEach((achievement: Achievement) => {
@@ -69,8 +77,12 @@ async function mapGlobalAchievementData(gameData: Game) {
   });
 }
 
-export async function getUserData() {
-  const response = await callApi(formulateUserApiUrl());
+export async function getUserData(steamUserId: string) {
+  if (!steamUserId) {
+    return { personaname: "-" };
+  }
+  console.log("NULL");
+  const response = await callApi(formulateUserApiUrl(steamUserId));
   const userInformation = response.response.players[0];
   return userInformation;
 }
@@ -90,17 +102,15 @@ async function callApi(apiUrl: string, format = "json") {
   }
 }
 
-function formulateGameApiUrl() {
+function formulateGameApiUrl(steamUserId: string) {
   const apiKey = import.meta.env.VITE_STEAM_API_KEY;
-  const steamId = import.meta.env.VITE_STEAM_ID || "76561198029946068";
-  const url = `/api/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&include_appinfo=true&format=json`;
+  const url = `/api/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamUserId}&include_appinfo=true&format=json`;
   return url;
 }
 
-function formulateUserApiUrl() {
+function formulateUserApiUrl(steamUserId: string) {
   const apiKey = import.meta.env.VITE_STEAM_API_KEY;
-  const steamId = import.meta.env.VITE_STEAM_ID || "76561198029946068";
-  const url = `/api/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=${steamId}&format=json`;
+  const url = `/api/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=${steamUserId}&format=json`;
   return url;
 }
 
@@ -110,18 +120,16 @@ export async function getGlobalAchievementPercentagesForGame(appId: string) {
   return response;
 }
 
-async function getPlayerAchievements(appId: string) {
+async function getPlayerAchievements(appId: string, steamUserId: string) {
   const apiKey = import.meta.env.VITE_STEAM_API_KEY;
-  const steamId = import.meta.env.VITE_STEAM_ID || "76561198029946068";
-  const url = `/api/ISteamUserStats/GetPlayerAchievements/v0001/?appid=${appId}&key=${apiKey}&steamid=${steamId}`;
+  const url = `/api/ISteamUserStats/GetPlayerAchievements/v0001/?appid=${appId}&key=${apiKey}&steamid=${steamUserId}`;
   const response = await callApi(url);
   return response;
 }
 
-export async function getRecentlyPlayedGames() {
+export async function getRecentlyPlayedGames(steamUserId: string) {
   const apiKey = import.meta.env.VITE_STEAM_API_KEY;
-  const steamId = import.meta.env.VITE_STEAM_ID || "76561198029946068";
-  const url = `/api/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${apiKey}&steamid=${steamId}&format=json`;
+  const url = `/api/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${apiKey}&steamid=${steamUserId}&format=json`;
   const response = await callApi(url);
   return response;
 }

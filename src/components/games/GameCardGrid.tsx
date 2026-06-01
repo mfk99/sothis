@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useGameStore } from "../../stores/game.store";
 import { GameCard } from "./GameCard";
+import { useuserSteamId } from "../../stores/userId.store";
 
 export function GameCardGrid({
   sortMode,
@@ -11,10 +12,11 @@ export function GameCardGrid({
 }) {
   const games = useGameStore((s) => s.games);
   const loadGames = useGameStore((s) => s.loadGames);
+  const userSteamId = useuserSteamId((s) => s.userSteamId);
 
   useEffect(() => {
-    loadGames();
-  }, [loadGames]);
+    loadGames(userSteamId);
+  }, [loadGames, userSteamId]);
 
   const sortedGames = [...games].sort((a: any, b: any) => {
     switch (sortMode) {
