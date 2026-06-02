@@ -4,13 +4,13 @@ import type { Game } from "../types/game";
 
 type AchievementDataStore = {
   achievementData: Record<number, Game>;
-  loadAchievementData: () => void;
+  loadAchievementData: (userSteamId: string) => void;
 };
 
 export const useAchievementDataStore = create<AchievementDataStore>((set) => ({
   achievementData: {},
-  loadAchievementData: async () => {
-    const achievementData = await getFullAchievementData();
+  loadAchievementData: async (userSteamId: string) => {
+    const achievementData = await getFullAchievementData(userSteamId);
     set({ achievementData });
   },
 }));

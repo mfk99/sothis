@@ -1,6 +1,10 @@
 import { Achievements } from "../achievements/Achievements";
 
-export function ProfilePage() {
+type ProfilePageProps = {
+  userSteamId: string;
+};
+
+export function ProfilePage({ userSteamId }: ProfilePageProps) {
   return (
     <div>
       <div className="text-white">
@@ -10,7 +14,7 @@ export function ProfilePage() {
           amount of games, please be patient.
         </div>
       </div>
-      <Achievements />
+      <Achievements userSteamId={userSteamId} />
     </div>
   );
 }

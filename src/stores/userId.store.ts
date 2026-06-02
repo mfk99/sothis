@@ -5,7 +5,7 @@ type userSteamId = {
   setUserSteamId: (newUserId: string) => void;
 };
 
-export const useuserSteamId = create<userSteamId>((set) => ({
+export const useUserSteamId = create<userSteamId>((set) => ({
   userSteamId: "",
   setUserSteamId: (newUserId: string) => set({ userSteamId: newUserId }),
 }));

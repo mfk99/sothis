@@ -2,14 +2,18 @@ import { useEffect } from "react";
 import { useAchievementDataStore } from "../../stores/achievement.store";
 import type { Game } from "../../types/game";
 
-export function Achievements() {
+type AchievementsProps = {
+  userSteamId: string;
+};
+
+export function Achievements({ userSteamId }: AchievementsProps) {
   const achievementData = useAchievementDataStore((s) => s.achievementData);
   const loadAchievementData = useAchievementDataStore(
     (s) => s.loadAchievementData,
   );
   useEffect(() => {
-    loadAchievementData();
-  }, []);
+    loadAchievementData(userSteamId);
+  }, [userSteamId]);
   return (
     <div>
       {Object.entries(achievementData).map(([key, value]) => (

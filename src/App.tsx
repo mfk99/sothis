@@ -6,13 +6,13 @@ import { ProfilePage } from "./components/pages/ProfilePage";
 import { LibraryPage } from "./components/pages/LibraryPage";
 import { ErrorPage } from "./components/pages/ErrorPage";
 import { UserIdInput } from "./components/user/UserIdInput";
-import { useuserSteamId } from "./stores/userId.store";
+import { useUserSteamId } from "./stores/userId.store";
 
 function App() {
   const pageState = usePageStore((s) => s.page);
   const loadUser = useUserStore((s) => s.loadUser);
-  const setUserSteamId = useuserSteamId((s) => s.setUserSteamId);
-  const userId = useuserSteamId((s) => s.userSteamId);
+  const setUserSteamId = useUserSteamId((s) => s.setUserSteamId);
+  const userId = useUserSteamId((s) => s.userSteamId);
 
   useEffect(() => {
     loadUser(userId);
@@ -25,7 +25,7 @@ function App() {
       page = <LibraryPage />;
       break;
     case "profile":
-      page = <ProfilePage />;
+      page = <ProfilePage userSteamId={userId} />;
       break;
     default:
       page = <ErrorPage />;

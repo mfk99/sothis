@@ -79,9 +79,9 @@ async function mapGlobalAchievementData(gameData: Game) {
 
 export async function getUserData(steamUserId: string) {
   if (!steamUserId) {
+    console.log("NULL");
     return { personaname: "-" };
   }
-  console.log("NULL");
   const response = await callApi(formulateUserApiUrl(steamUserId));
   const userInformation = response.response.players[0];
   return userInformation;
