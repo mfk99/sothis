@@ -6,17 +6,7 @@ export async function getGameData(steamUserId: string) {
   if (!steamUserId) return [];
   const url = `http://localhost:3000/gamedata/${steamUserId}`;
   const response = await callApi(url);
-  const usersGames = response.map((game: Game) => {
-    const gameImageUrl = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`;
-    return {
-      appid: game.appid,
-      name: game.name,
-      playtimeMinutes: game.playtime_forever,
-      gameImageUrl: gameImageUrl,
-      has_community_visible_stats: game?.has_community_visible_stats || false,
-    };
-  });
-  return usersGames;
+  return response;
 }
 
 export async function getFullAchievementData(steamUserId: string) {
