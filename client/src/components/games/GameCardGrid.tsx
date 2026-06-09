@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useGameStore } from "../../stores/game.store";
 import { GameCard } from "./GameCard";
 import { useUserSteamId } from "../../stores/userId.store";
+import { useGames } from "../../queries/useGames";
 
 export function GameCardGrid({
   sortMode,
@@ -10,32 +11,42 @@ export function GameCardGrid({
   sortMode: string;
   searchMode: string;
 }) {
-  const games = useGameStore((s) => s.games);
-  const loadGames = useGameStore((s) => s.loadGames);
   const userSteamId = useUserSteamId((s) => s.userSteamId);
+  const { data: games = [], isLoading, isError } = useGames(userSteamId);
 
-  useEffect(() => {
-    loadGames(userSteamId);
-  }, [loadGames, userSteamId]);
+  const filteredGames = useMemo(() => {
+    const sorted = [...games].sort((a: any, b: any) => {
+      switch (sortMode) {
+        case "alphabetical":
+          return a.name.localeCompare(b.name);
+        case "alphabetical-asc":
+          return b.name.localeCompare(a.name);
+        case "playtime":
+          return b.playtimeMinutes - a.playtimeMinutes;
+        case "playtime-asc":
+          return a.playtimeMinutes - b.playtimeMinutes;
+        default:
+          return 0;
+      }
+    });
 
-  const sortedGames = [...games].sort((a: any, b: any) => {
-    switch (sortMode) {
-      case "alphabetical":
-        return a.name.localeCompare(b.name);
-      case "alphabetical-asc":
-        return b.name.localeCompare(a.name);
-      case "playtime":
-        return b.playtimeMinutes - a.playtimeMinutes;
-      case "playtime-asc":
-        return a.playtimeMinutes - b.playtimeMinutes;
-      default:
-        return 0;
-    }
-  });
+    return sorted.filter((game: any) =>
+      game.name.toLowerCase().includes(searchMode.toLowerCase()),
+    );
+  }, [games, sortMode, searchMode]);
 
-  const filteredGames = [...sortedGames].filter((game: any) =>
-    game.name.toLowerCase().includes(searchMode.toLowerCase()),
-  );
+  if (isLoading) {
+    return <div className="text-white">Loading...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="text-white">
+        Something went wrong. Please verify that your SteamID is correct and
+        that your profile is set to public.
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-3 gap-3">
