@@ -13,7 +13,7 @@ const app = Express();
 const allowedOrigins = ["http://localhost:5173"];
 
 const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
+  connectionString: process.env.DIRECT_URL!,
 });
 
 const prisma = new PrismaClient({ adapter });
@@ -33,7 +33,7 @@ app.use(
   }),
 );
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   res.send("Hello World!");
 });
 
