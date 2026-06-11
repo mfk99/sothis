@@ -1,5 +1,4 @@
-import { useEffect, useMemo } from "react";
-import { useGameStore } from "../../stores/game.store";
+import { useMemo } from "react";
 import { GameCard } from "./GameCard";
 import { useUserSteamId } from "../../stores/userId.store";
 import { useGames } from "../../queries/useGames";
@@ -34,6 +33,15 @@ export function GameCardGrid({
       game.name.toLowerCase().includes(searchMode.toLowerCase()),
     );
   }, [games, sortMode, searchMode]);
+
+  if (filteredGames.length == 0) {
+    return (
+      <div className="text-white">
+        Enter a SteamID to view game the user's library. <br /> If you don't
+        have one, you can use mine: 76561198029946068
+      </div>
+    );
+  }
 
   if (isLoading) {
     return <div className="text-white">Loading...</div>;

@@ -4,7 +4,7 @@ function SearchInput({ onChange }: { onChange: (value: string) => void }) {
       <div className="relative">
         <input
           className=" w-full h-10 pl-8 pr-3 text-sm text-gray-700  focus:outline-none  shadow-sm focus:border-blue-500  border-2 border-solid border-gray-300 rounded-2xl bg-gray-300"
-          placeholder="HELLDIVERS™ 2" //TODO: This could be dynamically set to a random game
+          placeholder="Filter by name..." //TODO: This could be dynamically set to a random game
           onChange={(e) => onChange(e.target.value)}
         />
         <span className="absolute inset-y-0 left-0 flex items-center justify-center ml-2">
