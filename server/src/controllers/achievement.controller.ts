@@ -1,11 +1,11 @@
-import callApi from "../helpers/utils";
-import type { Achievement } from "../types/achievement";
-import type { Game } from "../types/game";
+import callApi from "../helpers/utils.js";
+import type { Achievement } from "../types/achievement.js";
+import type { Game } from "../types/game.js";
 import {
   getGameData,
   mapGameDataToDict,
   mapGameSchemaData,
-} from "./game.controller";
+} from "./game.controller.js";
 
 export async function getFullAchievementData(steamUserId: string) {
   if (!steamUserId) return {};

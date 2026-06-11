@@ -1,6 +1,6 @@
-import callApi from "../helpers/utils";
-import type { Achievement } from "../types/achievement";
-import type { Game } from "../types/game";
+import callApi from "../helpers/utils.js";
+import type { Achievement } from "../types/achievement.js";
+import type { Game } from "../types/game.js";
 
 export function mapGameDataToDict(gameList: Array<Game>) {
   const gamesDict: Record<number, Game> = {};

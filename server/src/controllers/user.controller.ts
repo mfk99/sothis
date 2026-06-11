@@ -1,4 +1,4 @@
-import callApi from "../helpers/utils";
+import callApi from "../helpers/utils.js";
 
 function formulateUserApiUrl(steamUserId: string) {
   const apiKey = process.env.STEAM_API_KEY;

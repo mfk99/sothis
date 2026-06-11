@@ -1,4 +1,4 @@
-import type { Achievement } from "./achievement";
+import type { Achievement } from "./achievement.js";
 
 export type Game = {
   name: string;

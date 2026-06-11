@@ -26,4 +26,4 @@ dist-ssr
 *.sw?
 
 # Backend-specific
-server/src/generated/prisma
+server/src/generated

@@ -1,10 +1,10 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import Express from "express";
-import { getUserData } from "./controllers/user.controller";
-import { getGameData } from "./controllers/game.controller";
-import { getFullAchievementData } from "./controllers/achievement.controller";
-import { PrismaClient } from "../node_modules/.prisma/client";
+import { getUserData } from "./controllers/user.controller.js";
+import { getGameData } from "./controllers/game.controller.js";
+import { getFullAchievementData } from "./controllers/achievement.controller.js";
+import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 dotenv.config();
