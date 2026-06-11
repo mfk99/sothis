@@ -12,7 +12,6 @@ dist
 dist-ssr
 *.local
 
-
 .env
 
 # Editor directories and files
@@ -25,3 +24,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Backend-specific
+server/src/generated/prisma

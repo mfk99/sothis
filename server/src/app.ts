@@ -1,14 +1,22 @@
-import Express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+import Express from "express";
 import { getUserData } from "./controllers/user.controller";
 import { getGameData } from "./controllers/game.controller";
-import dotenv from "dotenv";
 import { getFullAchievementData } from "./controllers/achievement.controller";
+import { PrismaClient } from "./generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 dotenv.config();
 const app = Express();
 
 const allowedOrigins = ["http://localhost:5173"];
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL!,
+});
+
+const prisma = new PrismaClient({ adapter });
 
 app.use(
   cors({
