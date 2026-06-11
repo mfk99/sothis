@@ -4,7 +4,7 @@ import Express from "express";
 import { getUserData } from "./controllers/user.controller";
 import { getGameData } from "./controllers/game.controller";
 import { getFullAchievementData } from "./controllers/achievement.controller";
-import { PrismaClient } from "./generated/prisma/client";
+import { PrismaClient } from "../node_modules/.prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 dotenv.config();
