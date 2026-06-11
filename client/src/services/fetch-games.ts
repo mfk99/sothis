@@ -1,17 +1,15 @@
-import type { Achievement } from "../types/achievement";
-import type { Game } from "../types/game";
-import { useQuery } from "@tanstack/react-query";
+const API_BASE_URL = import.meta?.env?.VITE_API_URL || "http://localhost:3000";
 
 export async function getGameData(steamUserId: string) {
   if (!steamUserId) return [];
-  const url = `http://localhost:3000/gamedata/${steamUserId}`;
+  const url = `${API_BASE_URL}/gamedata/${steamUserId}`;
   const response = await callApi(url);
   return response;
 }
 
 export async function getFullAchievementData(steamUserId: string) {
   if (!steamUserId) return {};
-  const url = `http://localhost:3000/userachievements/${steamUserId}`;
+  const url = `${API_BASE_URL}/userachievements/${steamUserId}`;
   const response = await callApi(url);
   console.log(response);
   return response;
@@ -21,7 +19,7 @@ export async function getUserData(steamUserId: string) {
   if (!steamUserId) {
     return { personaname: "-" };
   }
-  const url = `http://localhost:3000/user/${steamUserId}`;
+  const url = `${API_BASE_URL}/user/${steamUserId}`;
   const response = await callApi(url);
   console.log(response);
   const userInformation = response;
