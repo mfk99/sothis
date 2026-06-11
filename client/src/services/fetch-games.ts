@@ -11,7 +11,6 @@ export async function getFullAchievementData(steamUserId: string) {
   if (!steamUserId) return {};
   const url = `${API_BASE_URL}/userachievements/${steamUserId}`;
   const response = await callApi(url);
-  console.log(response);
   return response;
 }
 
@@ -21,13 +20,11 @@ export async function getUserData(steamUserId: string) {
   }
   const url = `${API_BASE_URL}/user/${steamUserId}`;
   const response = await callApi(url);
-  console.log(response);
   const userInformation = response;
   return userInformation;
 }
 
 async function callApi(apiUrl: string, format = "json") {
-  console.log(apiUrl);
   const response = await fetch(apiUrl);
   if (!response.ok) {
     throw new Error("Network response was not ok");
