@@ -10,10 +10,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 dotenv.config();
 const app = Express();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://mfk99.github.io/Plume/",
-];
+const allowedOrigins = ["http://localhost:5173", "https://mfk99.github.io"];
 
 const adapter = new PrismaPg({
   connectionString: process.env.DIRECT_URL!,
